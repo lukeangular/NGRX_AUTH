@@ -11,11 +11,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" [routerLink]="['/']">Home</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="!(isAuthenticated|async)">
                     <a class="nav-link text-light" [routerLink]="['/auth/login']">Login</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="!(isAuthenticated|async)">
                     <a class="nav-link text-light" [routerLink]="['/auth/register']">Sign Up</a>
+                </li>
+                <li class="nav-item" *ngIf="isAuthenticated|async">
+                    <a class="nav-link text-light" [routerLink]="['/auth/register']">Logout</a>
                 </li>
             </ul>
         </div>
