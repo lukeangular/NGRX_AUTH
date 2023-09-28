@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Actions, ofType, createEffect } from "@ngrx/effects";
 import { AuthService } from "src/app/services/auth.service";
-import { loginStart, loginSuccess } from "./auth.actions";
-import { catchError, exhaustMap, map, tap, of } from "rxjs";
+import { autoLogin, autoLogout, loginStart, loginSuccess } from "./auth.actions";
+import { catchError, exhaustMap, map, tap, of, mergeMap, EMPTY } from "rxjs";
 import { Router } from "@angular/router";
 import { setErrorMessage } from "src/app/shared/state/shared.actions";
 import { AppSate } from "src/app/appstate/app.state";
@@ -13,7 +13,7 @@ export class AuthEffect {
     constructor(
         private _action$: Actions,
         private _authService: AuthService,
-        private _router:Router,
+        private _router: Router,
         private _store: Store<AppSate>
     ) { }
 
@@ -24,26 +24,57 @@ export class AuthEffect {
                 return this._authService.login(action.email, action.password).
                     pipe(map((data) => {
                         // if no error then set error message null
-                        this._store.dispatch(setErrorMessage({message:''}))
+                        this._store.dispatch(setErrorMessage({ message: '' }))
                         const user = this._authService.formatUser(data)
-                        return loginSuccess({ user })
+                        this._authService.setUserInLocalStorage(user);
+                        return loginSuccess({ user, redirect: true })
                     }),
-                    catchError((errorResp)=>{
-                        const errorMesssage = this._authService.getErrorMessage(
-                            errorResp.error.error.message)
-                        return of(setErrorMessage({message: errorMesssage}))
-                    })
-                )
+                        catchError((errorResp) => {
+                            const errorMesssage = this._authService.getErrorMessage(
+                                errorResp.error.error.message)
+                            return of(setErrorMessage({ message: errorMesssage }))
+                        })
+                    )
             })
         )
     })
 
     // redirect to home page after login success
-    loginRedirect$ = createEffect(()=>{
+    loginRedirect$ = createEffect(() => {
         return this._action$.pipe(
             ofType(loginSuccess),
-            tap((acttion)=>{
-                this._router.navigate(['/'])
+            tap((acttion) => {
+                if (acttion.redirect) {
+                    this._router.navigate(['/'])
+                }
+            })
+        )
+    }, { dispatch: false })
+
+
+    // auto login
+    autoLogin$ = createEffect(() => {
+        return this._action$.pipe(
+            ofType(autoLogin),
+            mergeMap((action) => {
+                const user = this._authService.getUserFromLocalStorage();
+                console.log("USER ", user)
+                if (user !== null) {
+                    return of(loginSuccess({ user, redirect: false }))
+                } else {
+                    return EMPTY
+                }
+            })
+        )
+    })
+
+    // logout
+    $autoLogout = createEffect(()=>{
+        return this._action$.pipe(
+            ofType(autoLogout),
+            tap((action)=>{
+                this._authService.removeLocalStorage();
+                this._router.navigate(['auth'])
             })
         )
     }, {dispatch:false})

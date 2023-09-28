@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { AuthResponseData } from '../models/authResponse.model';
 import { environment } from "../environments/environment";
 import { User } from '../models/user.model';
@@ -40,6 +40,26 @@ export class AuthService {
       default:
         return 'Unknown Error Occcur. Please try again'
     }
+  }
+
+  // set user in localStorage()
+  setUserInLocalStorage(user:User){
+    localStorage.setItem('userData', JSON.stringify(user))
+  }
+
+  // get user form localStorage
+  getUserFromLocalStorage(){
+    const userDataString = localStorage.getItem('userData')
+    if(userDataString){
+      return JSON.parse(userDataString)
+    }
+    return null
+  }
+
+
+  // remove local storage
+  removeLocalStorage(){
+    localStorage.removeItem('userData')
   }
 
 

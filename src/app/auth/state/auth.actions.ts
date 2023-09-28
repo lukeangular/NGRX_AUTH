@@ -4,6 +4,8 @@ import { User } from "src/app/models/user.model"
 const AUTH_LOGIN_START = '[auth state] login start'
 const LOGIN_SUCCESS = '[auth state] login success'
 const LOGIN_FAIL = '[auth state] login fail'
+const AUTO_LOGIN = '[auth state] auto login'
+const AUTo_LOGOUT = '[auth state] auto logout'
 
 
 export const loginStart = createAction(
@@ -12,8 +14,14 @@ export const loginStart = createAction(
 )
 export const loginSuccess = createAction(
     LOGIN_SUCCESS,
-    props<{ user: User }>()
+    props<{ user: User, redirect: boolean }>()
 )
 export const loginFail = createAction(
     LOGIN_FAIL,
+)
+export const autoLogin = createAction(
+    AUTO_LOGIN,
+)
+export const autoLogout = createAction(
+    AUTo_LOGOUT
 )

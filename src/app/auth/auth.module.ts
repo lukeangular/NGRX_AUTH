@@ -5,8 +5,6 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EffectsModule } from "@ngrx/effects";
-import { AuthEffect } from './state/auth.effects';
 
 
 @NgModule({
@@ -19,7 +17,6 @@ import { AuthEffect } from './state/auth.effects';
     AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    EffectsModule.forFeature([AuthEffect]),
   ]
 })
 export class AuthModule { }
