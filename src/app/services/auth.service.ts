@@ -37,20 +37,23 @@ export class AuthService {
       case 'INVALID_PASSWORD':
         return 'Invalid Password'
 
+      case 'EMAIL_EXISTS':
+        return 'Email Exists'
+
       default:
         return 'Unknown Error Occcur. Please try again'
     }
   }
 
   // set user in localStorage()
-  setUserInLocalStorage(user:User){
+  setUserInLocalStorage(user: User) {
     localStorage.setItem('userData', JSON.stringify(user))
   }
 
   // get user form localStorage
-  getUserFromLocalStorage(){
+  getUserFromLocalStorage() {
     const userDataString = localStorage.getItem('userData')
-    if(userDataString){
+    if (userDataString) {
       return JSON.parse(userDataString)
     }
     return null
@@ -58,9 +61,16 @@ export class AuthService {
 
 
   // remove local storage
-  removeLocalStorage(){
+  removeLocalStorage() {
     localStorage.removeItem('userData')
   }
 
+
+
+  // sign up 
+  signUp(email: string, password: string): Observable<AuthResponseData> {
+    let url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.FIRBASE_API_KEY}`
+    return this._http.post<AuthResponseData>(url, { email, password, returnSecureToken: true })
+  }
 
 }
