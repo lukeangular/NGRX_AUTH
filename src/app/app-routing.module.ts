@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginGaurd } from './guard/loginGuard/loginguard.guard';
 
 const routes: Routes = [
   {
     path: '',
-    loadChildren:() => import('./home/home.module').then((m) => m.HomeModule)
+    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule)
   },
   {
     path: 'auth',
-    loadChildren:() => import('./auth/auth.module').then((m) => m.AuthModule)
+    canActivate: [LoginGaurd],
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule)
   }
 ];
 
