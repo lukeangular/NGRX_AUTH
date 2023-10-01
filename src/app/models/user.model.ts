@@ -5,4 +5,8 @@ export class User{
         private localId: string,
         private expirationdate: Date
     ){}
+
+    get getToken(){
+        return this.token
+    }
 }

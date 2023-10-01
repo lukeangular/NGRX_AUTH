@@ -17,6 +17,7 @@ export class AuthService {
   // login service
   login(email: string, password: string): Observable<AuthResponseData> {
     let url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.FIRBASE_API_KEY}`
+    // let url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.FIRBASE_API_KEY}`
     return this._http.post<AuthResponseData>(url, { email, password, returnSecureToken: true })
   }
 
@@ -70,6 +71,7 @@ export class AuthService {
   // sign up 
   signUp(email: string, password: string): Observable<AuthResponseData> {
     let url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.FIRBASE_API_KEY}`
+    // let url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.FIRBASE_API_KEY}`
     return this._http.post<AuthResponseData>(url, { email, password, returnSecureToken: true })
   }
 
